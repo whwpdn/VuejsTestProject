@@ -21,6 +21,12 @@ export default {
     onSubmit (uid, password) {
       // action login
       console.log(this.uid + ':' + this.password)
+      this.goToPages ()
+    },
+    goToPages () {
+      this.$router.push({
+        name: 'hello'
+      })
     }
   }
 }

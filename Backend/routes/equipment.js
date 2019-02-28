@@ -9,15 +9,24 @@ var connection = mysql_dbc.init();
 // 	res.send('Root');
 // });
 
-router.get('/',function(req, res){
-	console.log('test');
+router.get('/all',function(req, res){
 	var stmt = 'select * from equipment';
 	connection.query(stmt, function(err,rows){
 		if(err)
 			console.log('error : ', err);
-		console.log('rows : ' ,rows);
 		res.send(rows);
 	});
 });
+
+router.get('/TypeList',function(req, res){
+	var stmt = 'select _id, modelname, type from model';
+	connection.query(stmt, function(err,rows){
+		if(err)
+			console.log('error : ', err);
+		console.log(rows);
+		res.send(rows);
+	});
+});
+
 
 module.exports = router;
