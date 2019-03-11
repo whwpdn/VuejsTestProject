@@ -72,19 +72,39 @@ th.active .arrow {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="entry in data">
+        <tr v-for="entry in data" v-on:click="handleClickItem(entry)">
           <td v-for="value in entry">
             {{value}}
           </td>
         </tr>
       </tbody>
     </table>
+    <app-my-modal :visible="visible" :editItem="item"/>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions} from 'vuex'
+import myModal from './MyModal.vue'
 export default {
+
   name: 'MyGrid',
-  props: ['columns', 'data']
+  props: ['columns', 'data'],
+  data () {
+    return {
+      visible: false,
+      item: []
+    }
+  },
+  components: {
+    appMyModal: myModal
+  },
+  methods: {
+    handleClickItem: function (entry) {
+      this.visible = !this.visible
+      this.item = entry
+      console.log('click' + this.item + this.visible)
+    }
+  }
 }
 </script>

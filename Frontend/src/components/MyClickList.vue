@@ -38,19 +38,22 @@
 export default {
   name: 'MyList',
   props: ['items'],
-  data() {
-    return{
+  data () {
+    return {
       selectedPlace: null
     }
   },
   methods: {
-   selectItem (selectedItem) {
-        this.selectedPlace = selectedItem
-        this.getEquipmentList()
-   },
-   getEquipmentList() {
-    console.log(this.selectedPlace._id);
-    console.log(this.selectedPlace.type);
+    selectItem (selectedItem) {
+      this.selectedPlace = selectedItem
+      this.getEquipmentList()
+    },
+    getEquipmentList () {
+      var para = this.selectedPlace.modelname
+      this.$http.get(`api/equipment/specific/${para}`)
+        .then((response) => {
+          this.$emit('UpdateGridData-event', response.data)
+        })
     }
   }
 }

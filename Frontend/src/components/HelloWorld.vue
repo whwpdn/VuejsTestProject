@@ -1,9 +1,18 @@
 <template>
+  <meta charset=euc-kr" />
   <div class="hello">
-    <mylist :items="equipmentTypeList"></mylist>
-    <mygrid
-    :data="equipment"
-    :columns="gridColumns"></mygrid>
+    <section class="content">
+      <nav>
+        <mylist :items="equipmentTypeList" 
+               @UpdateGridData-event="UpdateGridData"></mylist>
+      </nav>
+      <main>
+        <mygrid
+          :data="equipment"
+         :columns="gridColumns"></mygrid>
+      </main>
+    </section>
+
   </div>
 </template>
 
@@ -13,7 +22,8 @@ import MyClickList from '@/components/MyClickList.vue'
 export default {
   name: 'HelloWorld',
   created () {
-    this.$http.get('api/equipment/all')
+    //this.$http.get('api/equipment/all')
+    this.$http.get('api/equipment/all2')
       .then((response) => {
         this.equipment = response.data
         //console.log(this.equipment)
@@ -26,9 +36,14 @@ export default {
   },
   data () {
     return {
-      gridColumns: ['_id', 'ManageNum', 'SerialNum', 'BoardId', 'SystemId', 'Splitter', 'CPU', 'RAM', 'HDD', 'VGA', 'UserId', 'Location', 'incomingDate', 'Note'],
+      gridColumns: ['ManageNum','System','MatroxBoard', 'SerialNum', 'Splitter', 'CPU', 'RAM', 'HDD', 'VGA', 'UserName', 'Location', 'incomingDate', 'Note'],
       equipment: [],
       equipmentTypeList: []
+    }
+  },
+  methods: {
+    UpdateGridData: function(datas) {
+      this.equipment = datas
     }
   },
   components: {
@@ -52,5 +67,18 @@ li {
 }
 a {
   color: #42b983;
+}
+nav, aside{
+            flex-basis: 150px;
+            flex-shrink: 0;
+}
+.content{
+  display:flex;
+}
+.content nav{
+  border-right:1px solid gray;
+}
+main{
+  padding:10px;
 }
 </style>

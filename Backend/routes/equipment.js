@@ -14,6 +14,16 @@ router.get('/all',function(req, res){
 	connection.query(stmt, function(err,rows){
 		if(err)
 			console.log('error : ', err);
+		//console.log(rows);
+		res.send(rows);
+	});
+});
+
+router.get('/all2',function(req, res){
+	var stmt = 'select * from equipmentdetails_view';
+	connection.query(stmt, function(err,rows){
+		if(err)
+			console.log('error : ', err);
 		res.send(rows);
 	});
 });
@@ -23,10 +33,20 @@ router.get('/TypeList',function(req, res){
 	connection.query(stmt, function(err,rows){
 		if(err)
 			console.log('error : ', err);
-		console.log(rows);
+		//console.log(rows);
 		res.send(rows);
 	});
 });
+router.get('/specific/:modelname',function(req, res){
+	var modelname = req.params.modelname;
+	var stmt = 'select * FROM equipmentdetails_view WHERE system ="'+modelname +'"';
+	connection.query(stmt, function(err,rows){
+		if(err)
+			console.log('error : ', err);
+		res.send(rows);
+	});
+});
+
 
 
 module.exports = router;
