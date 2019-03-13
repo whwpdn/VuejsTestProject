@@ -21,32 +21,46 @@ router.get('/all',function(req, res){
 
 router.get('/all2',function(req, res){
 	var stmt = 'select * from equipmentdetails_view';
-	connection.query(stmt, function(err,rows){
-		if(err)
-			console.log('error : ', err);
+	mysql_dbc.executeQuery(stmt,function(rows){
 		res.send(rows);
 	});
 });
 
 router.get('/TypeList',function(req, res){
 	var stmt = 'select _id, modelname, type from model';
-	connection.query(stmt, function(err,rows){
-		if(err)
-			console.log('error : ', err);
-		//console.log(rows);
+	mysql_dbc.executeQuery(stmt,function(rows){
 		res.send(rows);
 	});
 });
 router.get('/specific/:modelname',function(req, res){
 	var modelname = req.params.modelname;
 	var stmt = 'select * FROM equipmentdetails_view WHERE system ="'+modelname +'"';
-	connection.query(stmt, function(err,rows){
-		if(err)
-			console.log('error : ', err);
+	mysql_dbc.executeQuery(stmt,function(rows){
 		res.send(rows);
 	});
 });
-
-
+router.get('/historyField',function(req, res){
+	var stmt = 'SELECT column_name ' +
+				'FROM information_schema.columns ' +
+				'WHERE table_name="history_view"';
+	mysql_dbc.executeQuery(stmt,function(rows){
+		console.log(rows);
+		res.send(rows);
+	});
+});
+router.get('/history',function(req, res){
+	var stmt = 'select * FROM history_view';
+	mysql_dbc.executeQuery(stmt,function(rows){
+		res.send(rows);
+	});
+});
+router.post('/UpdateEqDetail',function(req, res){
+	var param = req.body;
+	console.log(param._id);
+	var stmt = 'INSERT INTO history SELECT 0, NOW(),_id, ManageNum, SERIALNum, BoardId, SystemId, Splitter, CPU, RAM, HDD, VGA, UserId, Location, IncomingDate, Note FROM equipment WHERE _Id = '+param._id;
+	mysql_dbc.executeQuery(stmt,function(rows){
+		res.send(rows);
+	});
+});
 
 module.exports = router;

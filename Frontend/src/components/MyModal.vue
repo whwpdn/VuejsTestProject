@@ -12,10 +12,14 @@
           <div class="modal-body">
             <slot name="body">
               <tr v-for="(value, key) in editItem">
-                <td>{{key}}</td>
-                <td>
-                  <input type="text" v-model="value">
+                <div v-if="key==='_id'">
+                </div>
+                <div v-else>
+                  <td>{{key}}</td>
+                  <td>
+                  <input type="text" :id="key" v-on:change="onChanged" v-model="value">
                 </td>
+                </div>
               </tr>
             </slot>
           </div>
@@ -24,6 +28,9 @@
             <slot name="footer">
               <button class="modal-default-button" v-on:click="clickOk">
                 OK
+              </button>
+              <button class="modal-default-button" v-on:click="$emit('close')">
+                Cancel
               </button>
             </slot>
           </div>
@@ -42,10 +49,26 @@ export default {
       default: false
     },
     editItem: []
+  
   },
+  
   methods: {
     clickOk: function () {
-      this.visible= false
+      this.visible = false
+      this.updateEquipmentDetail ()
+      //this.$emit('childs-event', this.editItem)
+      this.$emit('close')
+      
+    },
+    onChanged: function(evt){
+      this.editItem[evt.target.id] = evt.target.value
+    },
+    updateEquipmentDetail () {
+      var para = this.editItem
+      this.$http.post(`api/equipment/UpdateEqDetail/`,para)
+        .then((response) => {
+          this.$emit('UpdateGridData-event', response.data)
+        })
     }
   }
 }

@@ -7,9 +7,26 @@
                @UpdateGridData-event="UpdateGridData"></mylist>
       </nav>
       <main>
-        <mygrid
+        <vue-tabs @tab-change="handleTabChange">
+          <v-tab title="장비">
+            <mygrid
           :data="equipment"
-         :columns="gridColumns"></mygrid>
+         :columns="gridColumns"
+         :viewType="tabIndex"></mygrid>
+          </v-tab>
+
+          <v-tab title="보드">
+            Second tab content
+          </v-tab>
+
+          <v-tab title="히스토리">
+            <mygrid
+              :data="history"
+              :columns="historyCol"
+              :viewType="tabIndex"></mygrid>
+          </v-tab>
+        </vue-tabs>
+        
       </main>
     </section>
 
@@ -19,14 +36,25 @@
 <script>
 import MyGrid from '@/components/MyGrid.vue'
 import MyClickList from '@/components/MyClickList.vue'
+//local registration
+import {VueTabs, VTab} from 'vue-nav-tabs'
+//you can also import this in your style tag
+import 'vue-nav-tabs/themes/vue-tabs.css'
 export default {
   name: 'HelloWorld',
+  props: {
+    type: String,
+    default: ''
+  },
+  icon: {
+    type: String,
+    default: ''
+  },
   created () {
     //this.$http.get('api/equipment/all')
     this.$http.get('api/equipment/all2')
       .then((response) => {
         this.equipment = response.data
-        //console.log(this.equipment)
       })
     this.$http.get('api/equipment/TypeList')
     .then((response) => {
@@ -36,19 +64,40 @@ export default {
   },
   data () {
     return {
-      gridColumns: ['ManageNum','System','MatroxBoard', 'SerialNum', 'Splitter', 'CPU', 'RAM', 'HDD', 'VGA', 'UserName', 'Location', 'incomingDate', 'Note'],
+      gridColumns: ['ManageNum','System','serialNum','MatroxBoard', 'BoardSerialNum', 'Splitter', 'CPU', 'RAM', 'HDD', 'VGA', 'UserName', 'Location', 'incomingDate', 'Note'],
+      historyCol: ['No','date','ManageNum', 'system','Serial','MatroxBoard','BoardSerial', 'Splitter', 'CPU', 'RAM', 'HDD', 'VGA', 'name', 'Location', 'incomingDate', 'Note'],
       equipment: [],
-      equipmentTypeList: []
+      equipmentTypeList: [],
+      history: [],
+      tabIndex: 0
     }
   },
   methods: {
     UpdateGridData: function(datas) {
       this.equipment = datas
+    },
+    handleTabChange(tabIndex, newTab, oldTab){
+      this.tabIndex = tabIndex
+      if(tabIndex ==0){
+          console.log(tabIndex,"0")
+      }
+      else if(tabIndex ==1){
+        console.log(tabIndex,"1")
+      }
+      else {// 히스토리
+        this.$http.get('api/equipment/history')
+        .then((response) => {
+        this.history = response.data
+      //console.log(this.equipmentTypeList)
+    })
+      } 
     }
   },
   components: {
     'mygrid': MyGrid,
-    'mylist': MyClickList
+    'mylist': MyClickList,
+    VueTabs,
+    VTab
   }
 }
 </script>
@@ -81,4 +130,5 @@ nav, aside{
 main{
   padding:10px;
 }
+
 </style>
