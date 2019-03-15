@@ -82,7 +82,7 @@ th.active .arrow {
     <app-my-modal 
     :visible="visible" 
     :editItem="item" 
-    @childs-event="parentsMethod" 
+    
     @close="visible = false"/>
   </div>
 </template>
@@ -107,17 +107,16 @@ export default {
   methods: {
     handleClickItem: function (entry) {
       if(this.viewType == 2) return
-        console.log(this.viewType)
       this.visible = !this.visible
       this.item = entry
       //console.log('click' + this.item + this.visible)
-    }
-    // parentsMethod: function(data1) {
-    //   this.$http.get('api/equipment/history')
-    //   .then((response) => {
-    //     console.log("ok",response);
-    //     //this.equipment = response.data
-    //   })    
+    },
+    //@childs-event="parentsMethod"
+    // parentsMethod: function(editedData) {
+    //   for(var key in editedData){
+    //     this.data[key] = editedData[key]
+    //     console.log(key,editedData[key])
+    //   }
     // }
   }
 }

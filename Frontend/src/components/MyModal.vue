@@ -51,7 +51,11 @@ export default {
     editItem: []
   
   },
-  
+  data() {
+    return {
+      changedData: {}
+    }
+  },
   methods: {
     clickOk: function () {
       this.visible = false
@@ -61,14 +65,21 @@ export default {
       
     },
     onChanged: function(evt){
-      this.editItem[evt.target.id] = evt.target.value
+      //this.editItem[evt.target.id] = evt.target.value
+      this.changedData[evt.target.id] = evt.target.value
+      //console.log(this.changedData)
     },
     updateEquipmentDetail () {
       var para = this.editItem
-      this.$http.post(`api/equipment/UpdateEqDetail/`,para)
-        .then((response) => {
-          this.$emit('UpdateGridData-event', response.data)
-        })
+      this.changedData['_id'] = this.editItem._id
+      this.$http.post(`api/equipment/UpdateEqDetail/`,this.changedData)
+         .then((response) => {
+           if ( response.status ==200){
+            for(var key in this.changedData) {
+              this.editItem[key] = this.changedData[key]
+            }
+           }
+         })
     }
   }
 }
