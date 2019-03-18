@@ -37,7 +37,7 @@
 <script>
 export default {
   name: 'MyList',
-  props: ['items'],
+  props: ['items','viewType'],
   data () {
     return {
       selectedPlace: null
@@ -46,14 +46,37 @@ export default {
   methods: {
     selectItem (selectedItem) {
       this.selectedPlace = selectedItem
-      this.getEquipmentList()
-    },
-    getEquipmentList () {
+
       var para = this.selectedPlace.modelname
-      this.$http.get(`api/equipment/specific/${para}`)
+      var sql =''
+      if(para == "전체"){
+        sql = '/all2'
+      }
+      else{
+        sql = `/specific/${para}`
+      }
+
+      if(this.viewType ==0)
+      {
+        sql = 'api/equipment' + sql
+        this.getList(sql)
+      }
+      else if(this.viewType ==1){
+
+      }
+      else if( this.viewType==2){
+        sql = 'api/equipment/history' + sql
+        this.getList(sql)
+      }
+    },
+    getList(sql) {
+        this.$http.get(`${sql}`)
         .then((response) => {
           this.$emit('UpdateGridData-event', response.data)
         })
+        .catch(error => {
+          console.log(error)
+        });
     }
   }
 }

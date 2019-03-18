@@ -29,11 +29,17 @@ module.exports = function () {
           console.log(err); 
           return; 
         }
-        connection.query(stmt, function(erro,rows){
-          if(erro)
-            console.log('query error : ', erro ,'- query : ', stmt);
-          callback(rows);
-        });
+        try{
+          connection.query(stmt, function(erro,rows){
+            if(erro)
+              console.log('query error : ', erro ,'- query : ', stmt);
+            callback(rows);          
+          });
+        }
+        catch(ex){
+          console.log(ex)
+        }
+        connection.release();
       });
     },
 

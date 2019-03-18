@@ -74,7 +74,15 @@ th.active .arrow {
       <tbody>
         <tr v-for="entry in data" v-on:click="handleClickItem(entry)">
           <td v-for="key in columns">
-            {{entry[key]}}
+            <div  v-if="key === 'date'">
+              {{DateFormat(entry[key] , 'YY-MM-DD HH:mm:ss')}}
+            </div>
+            <div  v-else-if="key === 'incomingDate'">
+              {{DateFormat(entry[key] , 'YYYY-MM')}}
+            </div>
+            <div v-else>
+              {{entry[key]}}
+            </div>
           </td>
         </tr>
       </tbody>
@@ -90,6 +98,7 @@ th.active .arrow {
 <script>
 import { mapGetters, mapActions} from 'vuex'
 import myModal from './MyModal.vue'
+import moment from 'moment'
 export default {
 
   name: 'MyGrid',
@@ -111,6 +120,11 @@ export default {
       this.item = entry
       //console.log('click' + this.item + this.visible)
     },
+    DateFormat: function (value, formatString){
+      if( value) {
+        return moment(String(value)).format(formatString)
+      }
+    }
     //@childs-event="parentsMethod"
     // parentsMethod: function(editedData) {
     //   for(var key in editedData){
